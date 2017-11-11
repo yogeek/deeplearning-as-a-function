@@ -1,6 +1,6 @@
 # Installation script
 
-CUR_PWD=$(PWD)
+CUR_PWD=$(pwd)
 
 # A swarm mode cluster must be available (cf. README for help)
 

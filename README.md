@@ -33,6 +33,7 @@ It's also important to pass the `--advertise-addr` string to any hosts which hav
 
 * Connect to a swarm manager
 * Clone this repository
+* chmod u+x install.sh
 * Execute the install script :
 ```
 ./install.sh
@@ -63,6 +64,7 @@ The following script will :
 * Add Traefik reverse proxy in the stack
 * Deploy the secured stack
 ```
+chmod u+x install.sh
 ./install-secure.sh
 ```
 
