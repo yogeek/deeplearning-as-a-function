@@ -55,3 +55,13 @@ curl localhost:8080/function/darknet --data-binary @eagle.jpg
 ## Improvements
 
 To use in production mode, follow the [guide](https://blog.alexellis.io/lock-down-openfaas/) to lock-down OpenFaas with a reverse proxy like Traefik for example.
+
+# Example of lock-down using Traefik
+
+The following script will :
+* generate a password
+* add Traefik reverse proxy in the stack
+* deploy the secured stack
+```
+./install-secure.sh
+```
