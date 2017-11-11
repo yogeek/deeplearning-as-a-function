@@ -25,7 +25,7 @@ rm -rf template/
 echo "If you deploy to a multi-hosts cluster, you have to push the image to a registry."
 echo -n "Do you want to push the image to your docker account [y/n]?"
 read isLogin
-if [[ $isLogin ]]
+if [[ "$isLogin" == "y" ]]
 then
   echo -n "Enter your login: "
   read login

@@ -33,6 +33,9 @@ It's also important to pass the `--advertise-addr` string to any hosts which hav
 
 * Connect to a swarm manager
 * Clone this repository
+```
+git clone https://github.com/yogeek/deeplearning-as-a-function.git
+```
 * chmod u+x install.sh
 * Execute the install script :
 ```
