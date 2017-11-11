@@ -10,3 +10,11 @@ functions:
     environment:
       read_timeout: 60
       write_timeout: 60
+
+  nothotdog:
+    lang: Dockerfile
+    handler: ./nothotdog
+    image: yogeek/nothotdog
+    environment:
+      read_timeout: 60
+      write_timeout: 60

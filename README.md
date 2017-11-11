@@ -55,6 +55,11 @@ wget https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/%C3%81guila_calva
 ```
 curl localhost:8080/function/darknet --data-binary @eagle.jpg
 ```
+or with faas-cli
+```
+cat eagle.jpg | faas-cli invoke darknet
+```
+
 
 ## Improvements
 
