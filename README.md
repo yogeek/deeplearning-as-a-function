@@ -45,7 +45,7 @@ Your functions are available !
 Classify an image with darknet :
 * Get an image
 ```
- wget https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/%C3%81guila_calva.jpg/1200px-%C3%81guila_calva.jpg -O eagle.jpg
+wget https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/%C3%81guila_calva.jpg/1200px-%C3%81guila_calva.jpg -O eagle.jpg
 ```
 * Call the function from any node
 ```
@@ -56,12 +56,22 @@ curl localhost:8080/function/darknet --data-binary @eagle.jpg
 
 To use in production mode, follow the [guide](https://blog.alexellis.io/lock-down-openfaas/) to lock-down OpenFaas with a reverse proxy like Traefik for example.
 
-# Example of lock-down using Traefik
+### Example of lock-down using Traefik
 
 The following script will :
-* generate a password
-* add Traefik reverse proxy in the stack
-* deploy the secured stack
+* Ask for a password
+* Add Traefik reverse proxy in the stack
+* Deploy the secured stack
 ```
 ./install-secure.sh
+```
+
+Test :
+```
+curl -X POST http://localhost/function/darknet --data-binary @eagle.jpg
+401 : Acces Denied
+```
+```
+curl -u user:password -X POST http://localhost/function/darknet --data-binary @eagle.jpg
+OK !
 ```
