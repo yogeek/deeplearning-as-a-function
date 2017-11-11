@@ -7,6 +7,7 @@ CUR_PWD=$(pwd)
 # Get faas
 git clone https://github.com/openfaas/faas.git
 # Patch docker-compose file to remove sample functions
+mv faas/docker-compose.yml{,.with-sample}
 cp docker-compose-without-sample.yml faas/docker-compose.yml
 # Deploy FAAS !
 cd faas
@@ -38,3 +39,12 @@ fi
 
 # Deploy functions
 faas-cli deploy -f stack.yml
+
+# Deploy a function directly from an image
+#faas-cli deploy --image yogeek/darknet --name darknet
+
+# Test
+# date | faas-cli invoke -f callme.yml callme
+# curl --data-binary @README.md http://localhost:8080/function/nodejs-echo
+# uname -a | curl http://localhost:8080/function/nodejs-echo--data-binary @-
+#
