@@ -65,6 +65,10 @@ faas-cli list --gateway http://user:${secret}@localhost
 
 # Test
 echo ""
-echo "Test it :"
+echo "-------> Test it :"
+echo "Darknet, what is this image... ?"
 echo "cat img/bald-eagle.jpg | faas-cli invoke darknet --gateway http://user:<PASSWORD>@localhost"
-echo "curl -u user:password -X POST --data-binary @img/hotdog.jpg http://localhost:8080/function/nothotdog"
+echo "---"
+echo "Jin Yang, is it a hotdog... ?"
+echo "curl -u user:password -X POST --data-binary @img/hotdog.png http://localhost/function/nothotdog"
+echo ""
