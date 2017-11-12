@@ -36,7 +36,7 @@ services:
             labels:
                 - traefik.port=8080
                 - traefik.frontend.rule=PathPrefix:/ui,/system,/function
-                - traefik.frontend.auth.basic=@@@USER@@@:@@@PASSWORD@@@
+                - traefik.frontend.auth.basic=@@@USER_PASSWORD@@@
             resources:
                 limits:
                     memory: 50M

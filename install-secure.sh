@@ -16,9 +16,7 @@ htpasswd -c /tmp/password.txt $USER
 # Replace user and password into docker-compose file
 HASHED_PASSWD=$(cat /tmp/password.txt)
 ESCAPE_PASSWORD=$(echo $HASHED_PASSWD | sed 's/\$/$$/g')
-sed -i 's/@@@USER@@@/'$USER'/' docker-compose-with-traefik.yml
-sed -i 's/@@@PASSWORD@@@/'$ESCAPE_PASSWORD'/' docker-compose-with-traefik.yml
-
+sed -i 's#@@@USER_PASSWORD@@@#'"$ESCAPE_PASSWORD"'#' docker-compose-with-traefik.yml
 # Patch docker-compose file to add traefik in front of the gateway
 cp docker-compose-with-traefik.yml faas/docker-compose.yml
 # Deploy FAAS !
