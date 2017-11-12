@@ -3,6 +3,20 @@
 # Installation script
 
 # A swarm mode cluster must be available (cf. README for help)
+swarmInactive=$(docker info | grep -i swarm | grep inactive)
+# If swarm mode is inactive, we nicely propose to init a minimal swarm
+if [[ "$swarmInactive" != "" ]]
+then
+  echo "A swarm mode cluster must be available (cf. README for help)"
+  echo -n "Do you want to init a minimal one-node swarm ? [y/n]"
+  read createSwarm
+  if [[ "$createSwarm" == "y" ]]
+  then
+    docker swarm init --advertise-addr eth0
+  else
+    echo "Ok. You can do this yourself with 'docker swarm init' command"
+  fi
+fi
 
 CUR_PWD=$(pwd)
 
