@@ -1,4 +1,6 @@
-# Installation script
+#!/bin/sh
+
+# Secure Installation script
 
 # A swarm mode cluster must be available (cf. README for help)
 

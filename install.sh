@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Installation script
 
 CUR_PWD=$(pwd)
