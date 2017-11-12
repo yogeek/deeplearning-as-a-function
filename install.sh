@@ -23,7 +23,7 @@ CUR_PWD=$(pwd)
 # Get faas
 git clone https://github.com/openfaas/faas.git
 # Patch docker-compose file to remove sample functions
-mv faas/docker-compose.yml{,.with-sample}
+mv faas/docker-compose.yml faas/docker-compose.yml.with-sample
 cp docker-compose-without-sample.yml faas/docker-compose.yml
 # Deploy FAAS !
 cd faas
@@ -64,12 +64,15 @@ echo "Done !"
 
 cd ${CUR_PWD}
 
+# List functions
+faas-cli list --gateway http://user:${secret}@localhost
+
 # Test
 echo ""
-echo "Test it :"
-echo "cat img/eagle.jpg | faas-cli invoke darknet"
-echo "curl --data-binary @img/hotdog.jpg http://localhost:8080/function/nothotdog"
-# date | faas-cli invoke -f callme.yml callme
-# curl --data-binary @README.md http://localhost:8080/function/nodejs-echo
-# uname -a | curl http://localhost:8080/function/nodejs-echo--data-binary @-
-#
+echo "-------> Test it :"
+echo "Darknet, what is this image... ?"
+echo "cat img/bald-eagle.jpg | faas-cli invoke darknet"
+echo "---"
+echo "Jin Yang, is it a hotdog... ?"
+echo "curl --data-binary @img/hotdog.png http://localhost:8080/function/nothotdog"
+echo ""
