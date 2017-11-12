@@ -10,8 +10,11 @@ git clone https://github.com/openfaas/faas.git
 # Default user
 USER="user"
 # Generate a hashed password for user
-echo "Please enter a password to secure the cluster."
-htpasswd -c /tmp/password.txt $USER
+echo -n "Please enter a password to secure the cluster."
+read secret
+# htpasswd read from stdin with "-i" and write hashed passwd to the "-c" file
+# Format : "user:<HASHED_PASSWD>"
+echo $secret | htpasswd -i -c /tmp/password.txt $USER
 
 # Replace user and password into docker-compose file
 HASHED_PASSWD=$(cat /tmp/password.txt)
@@ -22,18 +25,20 @@ cp docker-compose-with-traefik.yml faas/docker-compose.yml
 # Deploy FAAS !
 cd faas
 ./deploy_stack.sh
+cd ${CUR_PWD}
 
 # Install faas-cli
 curl -sSL https://cli.openfaas.com | sudo sh
 
-# Alias faas-cli to use secure authentication
-alias faas-cli='faas-cli --gateway http://user:password@localhost'
-
+cd functions
 # Build functions
-faas-cli build -f functions/stack.yml
+faas-cli build -f stack.yml
 
 # Push functions (needed if multiple hosts cluster)
-faas-cli push -f functions/stack.yml
+faas-cli push -f stack.yml
 
 # Deploy functions
-faas-cli deploy -f functions/stack.yml
+faas-cli deploy -f stack.yml --gateway http://user:${secret}@localhost
+
+# List functions
+faas-cli list --gateway http://user:a@localhost
