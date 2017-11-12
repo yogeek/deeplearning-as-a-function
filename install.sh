@@ -55,7 +55,7 @@ fi
 
 # Deploy functions
 faas-cli deploy -f stack.yml
-
+sleep 5
 # Deploy a function directly from an image
 #faas-cli deploy --image yogeek/darknet --name darknet
 

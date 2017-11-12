@@ -54,7 +54,7 @@ fi
 
 # Deploy functions
 faas-cli deploy -f stack.yml --gateway http://user:${secret}@localhost
-
+sleep 5
 echo ""
 echo "Done !"
 
