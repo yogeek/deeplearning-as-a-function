@@ -4,14 +4,16 @@
 
 # A swarm mode cluster must be available (cf. README for help)
 
+CUR_PWD=$(pwd)
+
 # Get faas
 git clone https://github.com/openfaas/faas.git
 
 # Default user
 USER="user"
 # Generate a hashed password for user
-echo -n "Please enter a password to secure the cluster."
-read secret
+echo -n "Please enter a password to secure the cluster :"
+read -s secret
 # htpasswd read from stdin with "-i" and write hashed passwd to the "-c" file
 # Format : "user:<HASHED_PASSWD>"
 echo $secret | htpasswd -i -c /tmp/password.txt $USER
@@ -33,12 +35,36 @@ curl -sSL https://cli.openfaas.com | sudo sh
 cd functions
 # Build functions
 faas-cli build -f stack.yml
+rm -rf template/
 
 # Push functions (needed if multiple hosts cluster)
-faas-cli push -f stack.yml
+echo "If you deploy to a multi-hosts cluster, you have to push the image to a registry."
+echo -n "Do you want to push the image to your docker account [y/n]?"
+read isLogin
+if [[ "$isLogin" == "y" ]]
+then
+  echo -n "Enter your login: "
+  read login
+  echo -n "Enter your password: "
+  read -s password
+  docker login -u $login -p $password
+  echo "Pushing image..."
+  faas-cli push -f stack.yml
+fi
 
 # Deploy functions
 faas-cli deploy -f stack.yml --gateway http://user:${secret}@localhost
 
+echo ""
+echo "Done !"
+
+cd ${CUR_PWD}
+
 # List functions
-faas-cli list --gateway http://user:a@localhost
+faas-cli list --gateway http://user:${secret}@localhost
+
+# Test
+echo ""
+echo "Test it :"
+echo "cat img/bald-eagle.jpg | faas-cli invoke darknet --gateway http://user:<PASSWORD>@localhost"
+echo "curl -u user:password -X POST --data-binary @img/hotdog.jpg http://localhost:8080/function/nothotdog"

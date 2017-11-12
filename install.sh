@@ -2,9 +2,9 @@
 
 # Installation script
 
-CUR_PWD=$(pwd)
-
 # A swarm mode cluster must be available (cf. README for help)
+
+CUR_PWD=$(pwd)
 
 # Get faas
 git clone https://github.com/openfaas/faas.git
@@ -45,7 +45,16 @@ faas-cli deploy -f stack.yml
 # Deploy a function directly from an image
 #faas-cli deploy --image yogeek/darknet --name darknet
 
+echo ""
+echo "Done !"
+
+cd ${CUR_PWD}
+
 # Test
+echo ""
+echo "Test it :"
+echo "cat img/eagle.jpg | faas-cli invoke darknet"
+echo "curl --data-binary @img/hotdog.jpg http://localhost:8080/function/nothotdog"
 # date | faas-cli invoke -f callme.yml callme
 # curl --data-binary @README.md http://localhost:8080/function/nodejs-echo
 # uname -a | curl http://localhost:8080/function/nodejs-echo--data-binary @-
