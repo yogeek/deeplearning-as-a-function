@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # Installation script
+echo $SWARM_ETH
 
 # A swarm mode cluster must be available (cf. README for help)
 swarmInactive=$(docker info | grep -i swarm | grep inactive)
@@ -12,9 +13,23 @@ then
   read createSwarm
   if [[ "$createSwarm" == "y" ]]
   then
-    docker swarm init --advertise-addr eth0
+    docker swarm init --advertise-addr ${SWARM_ETH:-eth1}
+    if [[ $? -ne 0 ]]
+    then
+      echo ""
+      echo "---------------------------------------------------------------------------------------------------------------------"
+      echo "Error to create Swarm cluster. Possible causes :"
+      echo "   - Check docker version (must be 1.12+)"
+      echo "   - Your network interface	(${SWARM_ETH:-eth0}) is not valid. Please export SWARM_ETH=<your_nerwork_interface> and relaunch this script."
+      echo "     (interface list can be displayed by 'ifconfig' command)"
+      echo "     => example : export SWARM_ETH=ens160"
+      echo "---------------------------------------------------------------------------------------------------------------------"
+      echo ""
+      exit 1
+    fi
   else
     echo "Ok. You can do this yourself with 'docker swarm init' command"
+    exit 1
   fi
 fi
 
