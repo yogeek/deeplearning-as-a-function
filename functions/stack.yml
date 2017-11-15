@@ -6,7 +6,7 @@ functions:
   darknet:
     lang: Dockerfile
     handler: ./darknet
-    image: yogeek/darknet
+    image: yogeek/faas-darknet
     environment:
       read_timeout: 60
       write_timeout: 60
@@ -14,7 +14,7 @@ functions:
   nothotdog:
     lang: Dockerfile
     handler: ./nothotdog
-    image: yogeek/nothotdog
+    image: yogeek/faas-nothotdog
     environment:
       read_timeout: 60
       write_timeout: 60
