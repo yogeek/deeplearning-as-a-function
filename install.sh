@@ -46,7 +46,12 @@ cd faas
 cd ${CUR_PWD}
 
 # Install faas-cli
-curl -sSL https://cli.openfaas.com | sudo sh
+#curl -sSL https://cli.openfaas.com | sudo sh
+
+# Use faasci docker image
+echo "Getting faas-cli image..."
+docker pull yogeek/faas-cli
+alias faas-cli='docker run --rm -i --net=host -v $(pwd):/app -w /app -e LOCAL_USER_ID=`id -u $USER` yogeek/faas-cli faas-cli'
 
 # Build functions
 cd functions
