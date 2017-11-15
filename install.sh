@@ -51,7 +51,7 @@ cd ${CUR_PWD}
 # Use faasci docker image
 echo "Getting faas-cli image..."
 docker pull yogeek/faas-cli
-alias faas-cli='docker run --rm -i --net=host -v $(pwd):/app -w /app -e LOCAL_USER_ID=`id -u $USER` yogeek/faas-cli faas-cli'
+alias faas-cli='docker run --rm -i --net=host -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/app -w /app -e LOCAL_USER_ID=`id -u $USER` yogeek/faas-cli faas-cli'
 
 # Build functions
 cd functions
