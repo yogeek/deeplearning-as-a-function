@@ -73,7 +73,23 @@ services:
                     - 'node.role == manager'
                     - 'node.platform.os == linux'
 
+    grafana:
+        image: grafana/grafana:latest
+        environment:
+            no_proxy: "gateway"
+        ports:
+              - "3000:3000"
+        networks:
+            - functions
+        depends_on:
+            - gateway
+        deploy:
+            placement:
+                constraints:
+                    - 'node.role == manager'
+                    - 'node.platform.os == linux'
+
 networks:
     functions:
         driver: overlay
-        #attachable: true
+        attachable: true
