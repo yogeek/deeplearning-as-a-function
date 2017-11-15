@@ -1,0 +1,12 @@
+{
+    "name": "DS_FAAS",
+    "type": "prometheus",
+    "typeLogoUrl": "public/app/plugins/datasource/prometheus/img/prometheus_logo.svg",
+    "access": "proxy",
+    "url": "http://func_prometheus:9090",
+    "password": "",
+    "user": "",
+    "database": "",
+    "basicAuth": false,
+    "isDefault": true
+  }
