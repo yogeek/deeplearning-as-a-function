@@ -3,20 +3,17 @@ FROM think/darknet
 # TODO : update the image because it does not build anymore...
 # (problem with gcc alpine package version ?)
 
+# Remove base image entrypoint (to not interfere with fwatchdog)
+ENTRYPOINT []
+
 # Get fwatchdog
 #
-ADD https://github.com/openfaas/faas/releases/download/0.6.7/fwatchdog /usr/bin
+ADD https://github.com/openfaas/faas/releases/download/0.6.10/fwatchdog /usr/bin
 RUN chmod +x /usr/bin/fwatchdog
 
-WORKDIR /root
+COPY darknet.sh /
 
-COPY darknet.sh .
-
-# Populate example here - i.e. "cat", "sha512sum" or "node index.js"
-ENV fprocess="./darknet.sh"
-
-# Remove base image entrypoint (to not interfere with fwatchdog)
-ENTRYPOINT [""]
+ENV fprocess="/darknet.sh"
 
 HEALTHCHECK --interval=5s CMD [ -e /tmp/.lock ] || exit 1
 CMD ["fwatchdog"]

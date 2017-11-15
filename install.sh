@@ -35,13 +35,15 @@ then
     echo "Ok. You can do this yourself with 'docker swarm init' command"
     exit 1
   fi
+else
+  echo "You already have a Swarm activated. Let's use it !"
 fi
 
 CUR_PWD=$(pwd)
 
 # Get faas
 git clone https://github.com/openfaas/faas.git
-# Patch docker-compose file to remove sample functions
+# Patch docker-compose file (add grafan, remove sample functions...)
 mv faas/docker-compose.yml faas/docker-compose.yml.with-sample
 cp docker-compose-without-sample.yml faas/docker-compose.yml
 # Deploy FAAS !
@@ -50,30 +52,35 @@ cd faas
 cd ${CUR_PWD}
 
 # Install faas-cli
-#curl -sSL https://cli.openfaas.com | sudo sh
-
-# Use faasci docker image
-echo "Getting faas-cli image..."
-docker pull yogeek/faas-cli
-
-# Search for docker group GID
-if [[ $(command -v getent >/dev/null 2>&1) ]]
+echo -n "Do you want to install faas-cli on your host (sudo permission required) ? [y/n]"
+read installcli
+if [[ "$installcli" == "y" ]]
 then
-  DOCKER_GID=$(getent group docker | cut -d: -f3)
+  curl -sSL https://cli.openfaas.com | sudo sh
 else
-  # getent not installed => /etc/group and awk instead
-  DOCKER_GID=$(cat /etc/group | grep docker: | awk -F\: '{print $3}')
-fi
+  # Use faasci docker image
+  echo "Getting faas-cli image..."
+  docker pull yogeek/faas-cli
 
-# Replace faas-cli command to run into custom docker image
-alias faas-cli='docker run --rm -it \
-	--net=host \
-	-v /var/run/docker.sock:/var/run/docker.sock \
-	-v $(pwd):/app \
-	-w /app \
-	-e LOCAL_USER_ID=`id -u $USER` \
-	-e DOCKER_GID=${DOCKER_GID} \
-	yogeek/faas-cli faas-cli'
+  # Search for docker group GID
+  if [[ $(command -v getent >/dev/null 2>&1) ]]
+  then
+    DOCKER_GID=$(getent group docker | cut -d: -f3)
+  else
+    # getent not installed => /etc/group and awk instead
+    DOCKER_GID=$(cat /etc/group | grep docker: | awk -F\: '{print $3}')
+  fi
+
+  # Replace faas-cli command to run into custom docker image
+  alias faas-cli='docker run --rm -it \
+  	--net=host \
+  	-v /var/run/docker.sock:/var/run/docker.sock \
+  	-v $(pwd):/app \
+  	-w /app \
+  	-e LOCAL_USER_ID=`id -u $USER` \
+  	-e DOCKER_GID=${DOCKER_GID} \
+  	yogeek/faas-cli faas-cli'
+fi
 
 cd functions
 if [[ "$1" == "build" ]]
@@ -99,30 +106,28 @@ then
 fi
 
 # Deploy functions
-FAAS_IP=$(ifconfig ${SWARM_ETH:-localhost} | grep "inet " | awk '{print $2}')
+FAAS_IP=$(ifconfig ${SWARM_ETH:-eth1} | grep "inet " | awk '{print $2}')
 #faas-cli deploy --gateway http://${FAAS_IP}:8080 -f stack.yml
 faas-cli deploy -f stack.yml
 sleep 10
 # Deploy a function directly from an image
 #faas-cli deploy --image yogeek/darknet --name darknet
 
-# Import Grafan dashboard
-# curl -X POST https://${FAAS_IP}/api/v2/grafana/dashboards/ -d @faas-dashboard.json
+# Import Grafana datasource and dashboard
+cd ${CUR_PWD}
+./setGrafana.sh "${FAAS_IP}"
 
 echo ""
 echo "----------------------------------------------"
 echo "FaaS available : "
 echo "	GATEWAY : http://${FAAS_IP}:8080"
-echo "	DASHBOARD : http://${FAAS_IP}:3000"
-echo ""
-echo "Import "faas-dashboard.json" in grafana and enjoy monitoring !
+echo "	DASHBOARD : http://${FAAS_IP}:3000/dashboard/db/openfaas-serverless-dashboard?refresh=5s&orgId=1"
+echo "  (default : admin/admin)"
 echo ""
 echo "----------------------------------------------"
 
 echo ""
 echo "Done !"
-
-cd ${CUR_PWD}
 
 # List functions
 faas-cli list
