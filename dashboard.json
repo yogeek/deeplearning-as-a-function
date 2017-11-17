@@ -48,7 +48,7 @@
               "rgba(237, 129, 40, 0.89)",
               "rgba(50, 172, 45, 0.97)"
             ],
-            "datasource": "DS_FAAS",
+            "datasource": "faas",
             "format": "none",
             "gauge": {
               "maxValue": 100,
@@ -135,7 +135,7 @@
               "rgba(237, 129, 40, 0.89)",
               "rgba(245, 54, 54, 0.9)"
             ],
-            "datasource": "DS_FAAS",
+            "datasource": "faas",
             "decimals": null,
             "format": "none",
             "gauge": {
@@ -212,7 +212,7 @@
               "rgba(237, 129, 40, 0.89)",
               "rgba(50, 172, 45, 0.97)"
             ],
-            "datasource": "DS_FAAS",
+            "datasource": "faas",
             "format": "none",
             "gauge": {
               "maxValue": 100,
@@ -300,7 +300,7 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": "DS_FAAS",
+            "datasource": "faas",
             "fill": 4,
             "id": 2,
             "legend": {
@@ -383,7 +383,7 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": "DS_FAAS",
+            "datasource": "faas",
             "fill": 1,
             "id": 4,
             "legend": {
@@ -472,7 +472,7 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": "DS_FAAS",
+            "datasource": "faas",
             "fill": 4,
             "id": 1,
             "legend": {
@@ -559,7 +559,7 @@
               "mode": "spectrum"
             },
             "dataFormat": "timeseries",
-            "datasource": "DS_FAAS",
+            "datasource": "faas",
             "heatmap": {},
             "highlightCards": true,
             "id": 12,
@@ -688,7 +688,7 @@
             "text": "All",
             "value": "$__all"
           },
-          "datasource": "DS_FAAS",
+          "datasource": "faas",
           "hide": 0,
           "includeAll": true,
           "label": "function",

@@ -1,6 +1,6 @@
 provider:
   name: faas
-  gateway: http://172.28.128.4:8080
+  gateway: http://localhost:8080
 
 functions:
   darknet:

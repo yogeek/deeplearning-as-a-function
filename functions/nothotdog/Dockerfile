@@ -19,4 +19,4 @@ ENV fprocess="./nothotdog.sh"
 ENTRYPOINT []
 
 HEALTHCHECK --interval=5s CMD [ -e /tmp/.lock ] || exit 1
-CMD ["fwatchdog"]
+CMD ["/usr/bin/fwatchdog"]

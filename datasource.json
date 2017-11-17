@@ -1,5 +1,5 @@
 {
-    "name": "DS_FAAS",
+    "name": "faas",
     "type": "prometheus",
     "typeLogoUrl": "public/app/plugins/datasource/prometheus/img/prometheus_logo.svg",
     "access": "proxy",
