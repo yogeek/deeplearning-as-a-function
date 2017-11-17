@@ -91,6 +91,24 @@ services:
                     - 'node.role == manager'
                     - 'node.platform.os == linux'
 
+    otter:
+        image: yogeek/otter
+        labels:
+            function: "true"
+        depends_on:
+            - gateway
+        volumes:
+            - /home/docker/data/:/data/
+        networks:
+            - functions
+        environment:
+            no_proxy: "gateway"
+            https_proxy: $https_proxy
+        deploy:
+            placement:
+                constraints:
+                    - 'node.platform.os == linux'
+
 networks:
     functions:
         driver: overlay
