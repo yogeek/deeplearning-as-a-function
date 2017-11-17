@@ -11,6 +11,14 @@ functions:
       read_timeout: 120
       write_timeout: 120
 
+  darknet:
+    lang: Dockerfile
+    handler: ./yolo
+    image: yogeek/faas-yolo
+    environment:
+      read_timeout: 120
+      write_timeout: 120
+
   nothotdog:
     lang: Dockerfile
     handler: ./nothotdog
