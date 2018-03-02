@@ -106,7 +106,8 @@ then
 fi
 
 # Deploy functions
-FAAS_IP=$(ifconfig ${SWARM_ETH:-eth1} | grep "inet " | awk '{print $2}')
+FAAS_IP=$(hostname -i)
+#FAAS_IP=$(ifconfig ${SWARM_ETH:-eth1} | grep "inet " | awk '{print $2}')
 #faas-cli deploy --gateway http://${FAAS_IP}:8080 -f stack.yml
 faas-cli deploy -f stack.yml
 sleep 10

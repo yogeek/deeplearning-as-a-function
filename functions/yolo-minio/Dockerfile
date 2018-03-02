@@ -36,6 +36,10 @@ RUN chmod +x darknet.sh \
 
 WORKDIR "/darknet"
 
+# Get Minio client
+ADD https://dl.minio.io/client/mc/release/linux-amd64/mc /usr/bin
+RUN chmod +x /usr/bin/mc
+
 # Get fwatchdog
 #
 ADD https://github.com/openfaas/faas/releases/download/0.6.10/fwatchdog /usr/bin

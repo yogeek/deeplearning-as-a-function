@@ -1,0 +1,2 @@
+src=/data/otters_coco.png
+dest=/data/dark_otters.png
