@@ -11,6 +11,9 @@ minioClient = Minio(os.environ['minio_hostname'],
 
 bucket_input = os.environ['bucket_input']
 
+if not minioClient.bucket_exists(bucket_input):
+    minioClient.make_bucket(bucket_input)
+
 faasIP = 'gateway'
 faasPort = '8080'
 faasGatewayUrl = 'http://'+faasIP+':'+faasPort+'/function/'
