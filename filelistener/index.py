@@ -16,6 +16,7 @@ faasPort = '8080'
 faasGatewayUrl = 'http://'+faasIP+':'+faasPort+'/function/'
 faasYoloFunction = 'yolo'
 
+
 # JSON pretty print (json_thing = str or dict)
 def pp_json(json_thing, sort=True, indents=4):
     if type(json_thing) is str:
