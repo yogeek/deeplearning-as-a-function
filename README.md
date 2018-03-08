@@ -1,4 +1,4 @@
-# Deep Learning as a funtion
+# Deep Learning as a function (DLaaF)
 
 Easy deployment of Deep Learning predictions as functions thanks to OpenFaas awesome projet :-)
 

@@ -91,23 +91,54 @@ services:
                     - 'node.role == manager'
                     - 'node.platform.os == linux'
 
-    otter:
-        image: yogeek/otter
-        labels:
-            function: "true"
-        depends_on:
-            - gateway
+    minio:
+        image: minio/minio
         volumes:
-            - /home/docker/data/:/data/
+            - minio-data:/data
+            - minio-config:/root/.minio
+        ports:
+            - 9000:9000
         networks:
             - functions
         environment:
+            MINIO_ACCESS_KEY: 671A6QYAL6D7QF1G2EF8
+            MINIO_SECRET_KEY: ZXQsO6ak1zSzknHPmv1H8fxb7hHNvg/csiaGnQYX
+            no_proxy: "gateway"
+            https_proxy: $https_proxy
+        deploy:
+            restart_policy:
+                condition: any
+                delay: 10s
+                max_attempts: 10
+                window: 60s
+            placement:
+                constraints:
+                    - 'node.platform.os == linux'
+        command: server /data
+    
+    filelistener:
+        image: yogeek/filelistener
+        build:
+            context: ./filelistener
+        depends_on:
+            - gateway
+        networks:
+            - functions
+        environment:
+            minio_hostname: "minio:9000"
+            minio_access_key: "671A6QYAL6D7QF1G2EF8"
+            minio_secret_key: "ZXQsO6ak1zSzknHPmv1H8fxb7hHNvg/csiaGnQYX"
+            bucket_input: "input"
             no_proxy: "gateway"
             https_proxy: $https_proxy
         deploy:
             placement:
                 constraints:
                     - 'node.platform.os == linux'
+
+volumes:
+  minio-data:
+  minio-config:
 
 networks:
     functions:
