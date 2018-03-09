@@ -1,4 +1,4 @@
-import os, json, time, tempfile, sys, io, urllib, requests, contextlib, humanize
+import os, json, time, tempfile, sys, io, urllib, requests, contextlib, humanize, urllib3
 
 from minio import Minio
 from minio.error import ResponseError
@@ -11,6 +11,22 @@ minioClient = Minio(os.environ['minio_hostname'],
 
 bucket_input = os.environ['bucket_input']
 
+# Loop to wait for Minio server
+max_retries=10
+for i in range(max_retries):
+    try:
+       minioClient.list_buckets()
+    except urllib3.exceptions.MaxRetryError:
+        print("waiting for minio server...")
+        time.sleep(5)
+        continue  # retrying
+    else:
+        break
+else:
+    # network is down, act accordingly
+    print ("Error in filelistener : Minio server uneachable")
+
+# Create input bucket is missing
 if not minioClient.bucket_exists(bucket_input):
     minioClient.make_bucket(bucket_input)
 

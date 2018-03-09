@@ -117,7 +117,7 @@ services:
         command: server /data
     
     filelistener:
-        image: yogeek/filelistener
+        image: yogeek/filelistener:latest
         build:
             context: ./filelistener
         depends_on:

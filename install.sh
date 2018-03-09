@@ -1,10 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
 # Installation script
 if [[ ! -z $SWARM_ETH ]]
 then
   swarm_opts="--advertise-addr ${SWARM_ETH}"
 fi
+
+# Build optional
+OPT1=${1:-}
+
+FAAS_IP=$(hostname -i)
+#FAAS_IP=$(ifconfig ${SWARM_ETH:-eth1} | grep "inet " | awk '{print $2}')
 
 # A swarm mode cluster must be available (cf. README for help)
 swarmInactive=$(docker info | grep -i swarm | grep inactive)
@@ -52,38 +58,44 @@ cd faas
 cd ${CUR_PWD}
 
 # Install faas-cli
-echo -n "Do you want to install faas-cli on your host (sudo permission required) ? [y/n]"
-read installcli
-if [[ "$installcli" == "y" ]]
-then
-  curl -sSL https://cli.openfaas.com | sudo sh
+has=$(which faas-cli)
+if [ "$?" = "0" ]; then
+    echo
+    echo "You already have the faas-cli!"
 else
-  # Use faasci docker image
-  echo "Getting faas-cli image..."
-  docker pull yogeek/faas-cli
-
-  # Search for docker group GID
-  if [[ $(command -v getent >/dev/null 2>&1) ]]
+  echo -n "Do you want to install faas-cli on your host (sudo permission required) ? [y/n]"
+  read installcli
+  if [[ "$installcli" == "y" ]]
   then
-    DOCKER_GID=$(getent group docker | cut -d: -f3)
+    curl -sSL https://cli.openfaas.com | sudo sh
   else
-    # getent not installed => /etc/group and awk instead
-    DOCKER_GID=$(cat /etc/group | grep docker: | awk -F\: '{print $3}')
-  fi
+    # Use faasci docker image
+    echo "Getting faas-cli image..."
+    docker pull yogeek/faas-cli
 
-  # Replace faas-cli command to run into custom docker image
-  alias faas-cli='docker run --rm -it \
-  	--net=host \
-  	-v /var/run/docker.sock:/var/run/docker.sock \
-  	-v $(pwd):/app \
-  	-w /app \
-  	-e LOCAL_USER_ID=`id -u $USER` \
-  	-e DOCKER_GID=${DOCKER_GID} \
-  	yogeek/faas-cli faas-cli'
+    # Search for docker group GID
+    if [[ $(command -v getent >/dev/null 2>&1) ]]
+    then
+      DOCKER_GID=$(getent group docker | cut -d: -f3)
+    else
+      # getent not installed => /etc/group and awk instead
+      DOCKER_GID=$(cat /etc/group | grep docker: | awk -F\: '{print $3}')
+    fi
+
+    # Replace faas-cli command to run into custom docker image
+    alias faas-cli='docker run --rm -it \
+      --net=host \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      -v $(pwd):/app \
+      -w /app \
+      -e LOCAL_USER_ID=`id -u $USER` \
+      -e DOCKER_GID=${DOCKER_GID} \
+      yogeek/faas-cli faas-cli'
+  fi
 fi
 
 cd functions
-if [[ "$1" == "build" ]]
+if [[ "$OPT1" == "build" ]]
 then
   # Build functions
   faas-cli build -f stack.yml
@@ -101,16 +113,15 @@ then
     read -s password
     docker login -u $login -p $password
     echo "Pushing image..."
-    faas-cli push -f stack.yml
+    faas-cli push -f stack.yml 
   fi
 fi
 
 # Deploy functions
-FAAS_IP=$(hostname -i)
-#FAAS_IP=$(ifconfig ${SWARM_ETH:-eth1} | grep "inet " | awk '{print $2}')
+
 #faas-cli deploy --gateway http://${FAAS_IP}:8080 -f stack.yml
-faas-cli deploy -f stack.yml
-sleep 10
+faas-cli deploy -g http://${FAAS_IP}:8080 -f stack.yml 
+sleep 20
 # Deploy a function directly from an image
 #faas-cli deploy --image yogeek/darknet --name darknet
 
@@ -122,8 +133,12 @@ echo ""
 echo "----------------------------------------------"
 echo "FaaS available : "
 echo "	GATEWAY : http://${FAAS_IP}:8080"
-echo "	DASHBOARD : http://${FAAS_IP}:3000/dashboard/db/openfaas-serverless-dashboard?refresh=5s&orgId=1"
+echo ""
+echo "	DASHBOARD : http://${FAAS_IP}:3000/dashboards"
 echo "  (default : admin/admin)"
+echo ""
+echo "  MINIO : http://${FAAS_IP}:9000"
+echo "  (MINIO_ACCESS_KEY: 671A6QYAL6D7QF1G2EF8 / MINIO_SECRET_KEY: ZXQsO6ak1zSzknHPmv1H8fxb7hHNvg/csiaGnQYX"
 echo ""
 echo "----------------------------------------------"
 
@@ -131,7 +146,7 @@ echo ""
 echo "Done !"
 
 # List functions
-faas-cli list
+faas-cli list -g http://${FAAS_IP}:8080
 
 # Test
 echo ""
