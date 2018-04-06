@@ -32,7 +32,7 @@ if not minioClient.bucket_exists(bucket_input):
 
 faasIP = 'gateway'
 faasPort = '8080'
-faasGatewayUrl = 'http://'+faasIP+':'+faasPort+'/function/'
+faasGatewayUrl = 'http://'+faasIP+':'+faasPort+'/async-function/'
 faasYoloFunction = 'yolo'
 
 
@@ -67,16 +67,17 @@ def listenInputBucket(bucket_input, prefix='', suffix=''):
                         #    "image": input_file_name,
                         #    "output_filename": filename_out
                         #}
-                        #r = requests.post('http://gateway:8080/async-function/yolo', json=json_data)
-
-                        # Send image location to yolo function
                         r = requests.post(faasGatewayUrl + faasYoloFunction, input_file_name)
-                        if (r.status_code == requests.codes['\o/']):
-                            print("Prediction succeeded for -> " + input_file_name)
-                            # TODO : Move predicted file to an archive bucket ?
-                            # minioClient.get_object(bucket_name, input_file_name)
-                        else:
-                            print("Prediction failed for -> " + input_file_name + " Status code = " + str(r.status_code))
+
+                        print("Image %s have been sent to the prediction function..." % input_file_name)
+                        # Send image location to yolo function
+                        #r = requests.post(faasGatewayUrl + faasYoloFunction, input_file_name)
+                        # if (r.status_code == requests.codes['\o/']):
+                        #     print("Prediction succeeded for -> " + input_file_name)
+                        #     # TODO : Move predicted file to an archive bucket ?
+                        #     # minioClient.get_object(bucket_name, input_file_name)
+                        # else:
+                        #     print("Prediction failed for -> " + input_file_name + " Status code = " + str(r.status_code))
 
     except Exception as e:
         print("error damnit", e)

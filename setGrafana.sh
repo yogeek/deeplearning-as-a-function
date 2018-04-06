@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GRAFANA_IP=${1}
+GRAFANA_IP=${1:-"localhost"}
 
 while ! curl http://${GRAFANA_IP}:3000
 do
